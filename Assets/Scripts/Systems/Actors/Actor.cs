@@ -14,17 +14,16 @@ namespace Roomba.Systems.Actors
         public float speed = 6;
         public float turnSpeed = 0.2f;
         public float maxSlope = 28;
-        
-        [SerializeField]
-        private int _hp = 5;
-        
+
+        [SerializeField] private int _hp = 5;
+
         private Vector3 _velocity;
         private Rigidbody _rigidbody;
 
         [Inject] protected CameraController camera;
-        
+
         protected Vector3 lookDirection;
-        
+
         protected Vector3 direction;
         protected Vector3 groundNormal;
         protected bool grounded;
@@ -35,12 +34,11 @@ namespace Roomba.Systems.Actors
             direction = transform.forward;
             _rigidbody = GetComponent<Rigidbody>();
         }
-        
+
         protected virtual void Update()
         {
-            
         }
-        
+
         protected virtual void FixedUpdate()
         {
             Move();
@@ -54,7 +52,7 @@ namespace Roomba.Systems.Actors
                 turnSpeed,
                 1
             );
-            
+
             _velocity = speed * direction; //_camera.transform.TransformDirection(_input);
 
             _velocity.y = _rigidbody.velocity.y;
@@ -62,6 +60,20 @@ namespace Roomba.Systems.Actors
             _rigidbody.velocity = _velocity;
 
             transform.forward = direction;
+        }
+
+        #region Physics
+
+        protected virtual void OnTriggerEnter(Collider other)
+        {
+        }
+
+        protected virtual void OnTriggerStay(Collider other)
+        {
+        }
+
+        protected virtual void OnTriggerExit(Collider other)
+        {
         }
 
         protected virtual void OnCollisionEnter(Collision other)
@@ -99,7 +111,7 @@ namespace Roomba.Systems.Actors
             }
         }
 
-        protected virtual  void OnCollisionStay(Collision other)
+        protected virtual void OnCollisionStay(Collision other)
         {
             var normal = Vector3.zero;
 
@@ -129,8 +141,10 @@ namespace Roomba.Systems.Actors
             }
         }
 
-        protected virtual  void OnCollisionExit(Collision other)
+        protected virtual void OnCollisionExit(Collision other)
         {
         }
+
+        #endregion
     }
 }

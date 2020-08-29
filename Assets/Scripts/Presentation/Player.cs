@@ -1,6 +1,8 @@
-﻿using Roomba.Systems;
+﻿using System;
+using Roomba.Systems;
 using Roomba.Systems.Actors;
 using Roomba.Systems.Input;
+using Roomba.Systems.Interfaces;
 using UnityEngine;
 using Zenject;
 
@@ -12,12 +14,29 @@ namespace Roomba.Presentation
         [Inject] private InputCollector.InputSetting _setting;
         private Ray _ray;
         private Vector3 _axis;
+        private IInteractable _interactable;
 
         protected override void Awake()
         {
             base.Awake();
             
             _signal.Subscribe<AxisSignal>(AxisInput);
+            _signal.Subscribe<ActionSignal>(ActionInput);
+        }
+
+        private void ActionInput(ActionSignal action)
+        {
+            switch (action.actions)
+            {
+                case InputCollector.Actions.Interact:
+                    Interact();
+                    break;
+            }
+        }
+
+        private void Interact()
+        {
+            _interactable?.Interact();
         }
 
         void SetupMouseLook()
@@ -71,6 +90,25 @@ namespace Roomba.Presentation
             
             lookDirection.x = _axis.x;
             lookDirection.y = _axis.y;
+        }
+
+        protected override void OnTriggerEnter(Collider other)
+        {
+            base.OnTriggerEnter(other);
+            
+            _interactable = other.GetComponent<IInteractable>();
+        }
+
+        protected override void OnTriggerExit(Collider other)
+        {
+            base.OnTriggerExit(other);
+            
+            if (_interactable == null) return;
+
+            var reference = other.GetComponent<IInteractable>();
+            
+            if (reference == _interactable)
+                _interactable = null;
         }
     }
 }

@@ -35,6 +35,8 @@ namespace Roomba.Systems
             public string[] axis;
 
             public ButtonAction[] buttons;
+            
+            [Space]
             public LayerMask mouseMask;
         }
 
