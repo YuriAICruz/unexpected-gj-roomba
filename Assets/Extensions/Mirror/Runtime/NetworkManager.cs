@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using AsyncOperation = UnityEngine.AsyncOperation;
+using Object = UnityEngine.Object;
 
 namespace Mirror
 {
@@ -244,6 +246,18 @@ namespace Mirror
 
             // setup OnSceneLoaded callback
             SceneManager.sceneLoaded += OnSceneLoaded;
+
+            InitializeIntantiation();
+        }
+
+        private void InitializeIntantiation()
+        {
+            ClientScene.Instantiate += InstantiateClient;
+        }
+
+        protected virtual GameObject InstantiateClient(GameObject prefab, Vector3 position, Quaternion rotation)
+        {
+            return Object.Instantiate(prefab, position, rotation);
         }
 
         /// <summary>

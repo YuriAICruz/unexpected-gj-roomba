@@ -41,6 +41,10 @@ namespace Mirror
             }
         }
 
+        public delegate GameObject InstantiateDelegate(GameObject prefab, Vector3 position, Quaternion rotation);
+
+        public static event InstantiateDelegate Instantiate;
+
         public delegate void LocalplayerChanged(NetworkIdentity oldPlayer, NetworkIdentity newPlayer);
         public static event LocalplayerChanged onLocalPlayerChanged;
 
@@ -817,7 +821,7 @@ namespace Mirror
         {
             if (GetPrefab(msg.assetId, out GameObject prefab))
             {
-                GameObject obj = Object.Instantiate(prefab, msg.position, msg.rotation);
+                GameObject obj =  Instantiate(prefab, msg.position, msg.rotation);
                 if (logger.LogEnabled())
                 {
                     logger.Log("Client spawn handler instantiating [netId:" + msg.netId + " asset ID:" + msg.assetId + " pos:" + msg.position + " rotation: " + msg.rotation + "]");

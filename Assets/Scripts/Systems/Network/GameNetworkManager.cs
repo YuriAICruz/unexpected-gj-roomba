@@ -9,6 +9,7 @@ namespace Roomba.Systems.Network
     public class GameNetworkManager : NetworkManager
     {
         [Inject] private SignalBus _signalBus;
+
         //[Inject] private Player.Factory _playerFactory;
         [Inject] private ZenjectSceneLoader _sceneLoader;
         [Inject] private GlobalSettings _globalSettings;
@@ -72,7 +73,7 @@ namespace Roomba.Systems.Network
         public override void OnServerAddPlayer(Mirror.NetworkConnection conn)
         {
             Transform startPos = GetStartPosition();
-            
+
             GameObject player = _currentSceneContainer.Resolve<Player.Factory>().Create().gameObject;
 
             if (startPos != null)
@@ -85,14 +86,23 @@ namespace Roomba.Systems.Network
             //base.OnServerAddPlayer(conn);
         }
 
+        protected override GameObject InstantiateClient(GameObject prefab, Vector3 position, Quaternion rotation)
+        {
+            if (prefab.GetComponent<Player>() != null)
+            {
+                GameObject player = _currentSceneContainer.Resolve<Player.Factory>().Create().gameObject;
+                player.transform.SetPositionAndRotation(position, rotation);
+                return player;
+            }
+            
+            return base.InstantiateClient(prefab, position, rotation);
+        }
+
         protected override AsyncOperation LoadSceneAsync(string newSceneName,
             LoadSceneMode loadSceneMode = LoadSceneMode.Single)
         {
             return _sceneLoader.LoadSceneAsync(newSceneName, loadSceneMode,
-                container =>
-                {
-                    _currentSceneContainer = container;
-                });
+                container => { _currentSceneContainer = container; });
         }
     }
 }
