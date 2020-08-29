@@ -12,6 +12,9 @@ namespace Roomba.Presentation
     {
         [Inject] private SignalBus _signal;
         [Inject] private InputCollector.InputSetting _setting;
+
+        [Inject] private GameManager _gameManager;
+        
         private Ray _ray;
         private Vector3 _axis;
         private IInteractable _interactable;
@@ -22,6 +25,8 @@ namespace Roomba.Presentation
             
             _signal.Subscribe<AxisSignal>(AxisInput);
             _signal.Subscribe<ActionSignal>(ActionInput);
+            
+            _gameManager.SetPlayer(this);
         }
 
         private void ActionInput(ActionSignal action)

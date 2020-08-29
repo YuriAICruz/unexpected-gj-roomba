@@ -21,6 +21,8 @@ namespace Roomba.Installers
             Container.BindInstance(inputSetting);
             
             Container.BindInterfacesAndSelfTo<InputCollector>().AsSingle();
+            
+            Container.BindInterfacesAndSelfTo<ApplicationManager>().AsSingle().NonLazy();
         }
     }
 }

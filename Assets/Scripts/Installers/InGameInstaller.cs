@@ -8,5 +8,7 @@ public class InGameInstaller : MonoInstaller
     public override void InstallBindings()
     {
         Container.BindInstance(Camera.main.GetComponent<CameraController>());
+
+        Container.Bind<GameManager>().AsSingle().NonLazy();
     }
 }
