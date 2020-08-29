@@ -1,4 +1,7 @@
 ﻿using System;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 namespace Roomba.Systems
 {
@@ -11,7 +14,12 @@ namespace Roomba.Systems
         
         public void StartGame()
         {
-            throw new NotImplementedException();
+            SceneManager.LoadScene("Tests");
+        }
+
+        public void QuitGame()
+        {
+            Application.Quit();
         }
     }
 }
