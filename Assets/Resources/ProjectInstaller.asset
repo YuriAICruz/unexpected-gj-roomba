@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: ProjectInstaller
   m_EditorClassIdentifier: 
   inputSetting:
+    useMouse: 1
     axis:
     - Horizontal
     - Vertical
@@ -21,3 +22,6 @@ MonoBehaviour:
       button: 13
     - action: 3
       button: 27
+    mouseMask:
+      serializedVersion: 2
+      m_Bits: 4294967295

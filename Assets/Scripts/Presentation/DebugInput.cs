@@ -25,6 +25,7 @@ namespace Roomba.Presentation
         private void OnAxis(AxisSignal axis)
         {
             Debug.Log(axis);
+            
         }
     }
 }

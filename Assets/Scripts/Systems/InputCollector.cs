@@ -30,9 +30,12 @@ namespace Roomba.Systems
         [Serializable]
         public class InputSetting
         {
+            public bool useMouse;
+
             public string[] axis;
 
             public ButtonAction[] buttons;
+            public LayerMask mouseMask;
         }
 
         private readonly SignalBus _signalBus;
@@ -65,8 +68,21 @@ namespace Roomba.Systems
         {
             for (int i = 0; i < _axis.Length; i++)
             {
+                if (i <= 1 && _settings.useMouse)
+                {
+                    if (i == 0)
+                        _axis[i].Value = UnityEngine.Input.mousePosition.x;
+                    else
+                        _axis[i].Value = UnityEngine.Input.mousePosition.y;
+                    
+                    if (_axis[i].Dirty)
+                        _signalBus.Fire(_axis[i]);
+                    
+                    continue;
+                }
+
                 _axis[i].Value = UnityEngine.Input.GetAxisRaw(_settings.axis[i]);
-                
+
                 if (_axis[i].Dirty)
                     _signalBus.Fire(_axis[i]);
             }
@@ -88,7 +104,6 @@ namespace Roomba.Systems
                 }
             }
         }
-
 
         public void Tick()
         {
