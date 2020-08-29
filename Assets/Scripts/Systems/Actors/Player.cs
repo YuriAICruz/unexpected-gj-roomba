@@ -1,12 +1,9 @@
-﻿using System;
-using Roomba.Systems;
-using Roomba.Systems.Actors;
-using Roomba.Systems.Input;
+﻿using Roomba.Systems.Input;
 using Roomba.Systems.Interfaces;
 using UnityEngine;
 using Zenject;
 
-namespace Roomba.Presentation
+namespace Roomba.Systems.Actors
 {
     public class Player : Actor
     {
@@ -18,6 +15,11 @@ namespace Roomba.Presentation
         private Ray _ray;
         private Vector3 _axis;
         private IInteractable _interactable;
+        
+        public class Factory : PlaceholderFactory<Player>
+        {
+            
+        }
 
         protected override void Awake()
         {

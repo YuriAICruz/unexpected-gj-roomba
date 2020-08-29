@@ -56,8 +56,6 @@ namespace Roomba.Systems
 
             if (success)
                 _currentSpot = i;
-            
-            Debug.LogError(_currentSpot);
         }
 
         private void CalculateCenter()
