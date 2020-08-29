@@ -1,4 +1,5 @@
 ﻿using System;
+using Mirror;
 using Roomba.Systems.Interfaces;
 using UnityEngine;
 using Zenject;
@@ -6,13 +7,13 @@ using Zenject;
 namespace Roomba.Systems.Actors
 {
     [RequireComponent(typeof(Rigidbody))]
-    public abstract class Actor : MonoBehaviour,IDamageable
+    public abstract class Actor : NetworkBehaviour, IDamageable
     {
         public int Hp => _hp;
 
-        public float speed = 5;
-        public float turnSpeed = 2;
-        public float maxSlope = 32;
+        public float speed = 6;
+        public float turnSpeed = 0.2f;
+        public float maxSlope = 28;
         
         [SerializeField]
         private int _hp = 5;
