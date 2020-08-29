@@ -12,6 +12,7 @@ namespace Roomba.Systems.Actors
 
         public float speed = 5;
         public float turnSpeed = 2;
+        public float maxSlope = 32;
         
         [SerializeField]
         private int _hp = 5;
@@ -24,6 +25,8 @@ namespace Roomba.Systems.Actors
         protected Vector3 lookDirection;
         
         protected Vector3 direction;
+        protected Vector3 groundNormal;
+        protected bool grounded;
 
 
         protected virtual void Awake()
@@ -58,6 +61,75 @@ namespace Roomba.Systems.Actors
             _rigidbody.velocity = _velocity;
 
             transform.forward = direction;
+        }
+
+        protected virtual void OnCollisionEnter(Collision other)
+        {
+            var normal = Vector3.zero;
+
+            for (int i = 0; i < other.contacts.Length; i++)
+            {
+                normal += other.contacts[i].normal;
+            }
+
+            if (other.transform.CompareTag("DoNotBounce"))
+            {
+                return;
+            }
+
+            normal /= other.contacts.Length;
+
+            var angle = Vector3.Angle(normal, Vector3.up);
+
+            if (angle > 80) // wall
+            {
+                direction = normal;
+                direction.y = 0;
+            }
+            else // ground
+            {
+                if (other.contacts[0].point.y > transform.position.y)
+                {
+                    Debug.Log("----");
+                    var pos = transform.position;
+                    pos.y = other.contacts[0].point.y;
+                    transform.position = pos;
+                }
+            }
+        }
+
+        protected virtual  void OnCollisionStay(Collision other)
+        {
+            var normal = Vector3.zero;
+
+            for (int i = 0; i < other.contacts.Length; i++)
+            {
+                normal += other.contacts[i].normal;
+            }
+
+            normal /= other.contacts.Length;
+
+            var angle = Vector3.Angle(normal, Vector3.up);
+
+            if (angle > 80) // wall
+            {
+                return;
+            }
+
+            if (angle > maxSlope) // ground
+            {
+                groundNormal = normal;
+                grounded = true;
+            }
+            else
+            {
+                groundNormal = normal;
+                grounded = false;
+            }
+        }
+
+        protected virtual  void OnCollisionExit(Collision other)
+        {
         }
     }
 }

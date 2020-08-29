@@ -20,6 +20,43 @@ namespace Roomba.Presentation
             _signal.Subscribe<AxisSignal>(AxisInput);
         }
 
+        void SetupMouseLook()
+        {
+            if (!_setting.useMouse) return;
+            
+            lookDirection.x = _axis.x;
+            lookDirection.y = _axis.y;
+            
+            lookDirection.z = camera.camera.nearClipPlane;
+                
+            _ray = camera.camera.ScreenPointToRay(lookDirection);
+                
+            if (Physics.Raycast(_ray, out var hit, 1000, _setting.mouseMask))
+            {
+                lookDirection = hit.point;
+                Debug.DrawRay(_ray.origin, _ray.direction * hit.distance, Color.red);
+            }
+            else
+            {
+                lookDirection.z = (transform.position - camera.transform.position).magnitude;
+
+                Debug.DrawRay(_ray.origin, _ray.direction * 1000, Color.green);
+                lookDirection = camera.camera.ScreenToWorldPoint(lookDirection);
+            }
+                
+            lookDirection = lookDirection - transform.position;
+            lookDirection.y = 0;
+
+            lookDirection.Normalize();
+        }
+
+        protected override void FixedUpdate()
+        {
+            SetupMouseLook();
+            
+            base.FixedUpdate();
+        }
+
         private void AxisInput(AxisSignal axis)
         {
             switch (axis.id)
@@ -34,31 +71,6 @@ namespace Roomba.Presentation
             
             lookDirection.x = _axis.x;
             lookDirection.y = _axis.y;
-
-            if (_setting.useMouse)
-            {
-                lookDirection.z = camera.camera.nearClipPlane;
-                
-                _ray = camera.camera.ScreenPointToRay(lookDirection);
-                
-                if (Physics.Raycast(_ray, out var hit, 1000, _setting.mouseMask))
-                {
-                    lookDirection = hit.point;
-                    Debug.DrawRay(_ray.origin, _ray.direction * hit.distance, Color.red);
-                }
-                else
-                {
-                    lookDirection.z = (transform.position - camera.transform.position).magnitude;
-
-                    Debug.DrawRay(_ray.origin, _ray.direction * 1000, Color.green);
-                    lookDirection = camera.camera.ScreenToWorldPoint(lookDirection);
-                }
-                
-                lookDirection = lookDirection - transform.position;
-                lookDirection.y = 0;
-
-                lookDirection.Normalize();
-            }
         }
     }
 }
