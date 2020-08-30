@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Roomba.Systems.Actors;
 using UnityEngine;
 
@@ -18,13 +19,14 @@ namespace Roomba.Systems
         private Vector3 GetCenter()
         {
             var c = Vector3.zero;
-            
-            for (int i = 0; i < _players.Count; i++)
+
+            var ps = _players.Where(x => x.isLocalPlayer).ToArray();
+            for (int i = 0; i < ps.Length; i++)
             {
-                c += _players[i].transform.position;
+                c += ps[i].transform.position;
             }
 
-            c /= _players.Count;
+            c /= ps.Length;
 
             return c;
         }

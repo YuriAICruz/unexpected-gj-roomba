@@ -38,11 +38,18 @@ namespace Roomba.Systems.Actors
         {
             direction = transform.forward;
             _rigidbody = GetComponent<Rigidbody>();
+            
         }
 
         protected virtual void Start()
         {
             _spawnPoint = transform.position;
+
+            if (!isLocalPlayer)
+            {
+                _rigidbody.velocity = Vector3.zero;
+                _rigidbody.isKinematic = true;
+            }
         }
 
         private void Update()
