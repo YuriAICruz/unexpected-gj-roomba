@@ -28,6 +28,11 @@ namespace Roomba.Systems.Actors
         protected Vector3 groundNormal;
         protected bool grounded;
 
+        [SyncVar] private Vector3 _relativePosition;
+        [SyncVar] private Vector3 _relativeLook;
+
+        private Vector3 _spawnPoint;
+
 
         protected virtual void Awake()
         {
@@ -35,13 +40,58 @@ namespace Roomba.Systems.Actors
             _rigidbody = GetComponent<Rigidbody>();
         }
 
-        protected virtual void Update()
+        protected virtual void Start()
         {
+            _spawnPoint = transform.position;
+        }
+
+        private void Update()
+        {
+            if (isLocalPlayer)
+            {
+                LocalUpdate();
+            }
+            else
+            {
+                ClientsUpdate();
+            }
+        }
+
+        protected virtual void LocalUpdate()
+        {
+        }
+
+        protected virtual void ClientsUpdate()
+        {
+            transform.position = Vector3.Lerp(transform.position, _relativePosition, Time.deltaTime * 5f);
+            transform.forward = Vector3.RotateTowards(transform.forward, _relativeLook, Time.deltaTime * 5f, 1);
         }
 
         protected virtual void FixedUpdate()
         {
-            Move();
+            if (isLocalPlayer)
+            {
+                Move();
+
+                var pos = transform.position;
+                SetPosition(pos, transform.forward);
+
+                if (pos.y <= -5)
+                    Respawn();
+            }
+        }
+
+        private void Respawn()
+        {
+            transform.position = _spawnPoint;
+            _rigidbody.velocity = _velocity = Vector3.zero;
+        }
+
+        [Command]
+        protected void SetPosition(Vector3 position, Vector3 forward)
+        {
+            _relativePosition = position;
+            _relativeLook = forward;
         }
 
         protected void Move()
@@ -75,6 +125,7 @@ namespace Roomba.Systems.Actors
         protected virtual void OnTriggerExit(Collider other)
         {
         }
+
 
         protected virtual void OnCollisionEnter(Collision other)
         {

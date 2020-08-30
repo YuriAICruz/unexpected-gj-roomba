@@ -24,11 +24,19 @@ namespace Roomba.Systems.Actors
         protected override void Awake()
         {
             base.Awake();
-            
-            _signal.Subscribe<AxisSignal>(AxisInput);
-            _signal.Subscribe<ActionSignal>(ActionInput);
-            
-            _gameManager.SetPlayer(this);
+
+            _gameManager.SetPlayer(this);    
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+
+            if (isLocalPlayer)
+            {
+                _signal.Subscribe<AxisSignal>(AxisInput);
+                _signal.Subscribe<ActionSignal>(ActionInput);
+            }
         }
 
         private void ActionInput(ActionSignal action)

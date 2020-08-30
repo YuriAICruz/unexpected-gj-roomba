@@ -9,6 +9,7 @@ namespace Roomba.Systems
         public CameraSpot[] spots;
 
         public float speed;
+        public float rotationSpeed = 1;
 
         [Inject] private GameManager _gameManager;
 
@@ -32,7 +33,7 @@ namespace Roomba.Systems
             transform.position = Vector3.Lerp(transform.position, spots[_currentSpot].position,
                 Time.deltaTime * speed);
             transform.forward = Vector3.RotateTowards(transform.forward,
-                spots[_currentSpot].forward, Time.deltaTime * speed, 1);
+                spots[_currentSpot].forward, Time.deltaTime * rotationSpeed, 1);
         }
 
         private void FixedUpdate()

@@ -1,13 +1,15 @@
 ﻿using Roomba.Systems.Interfaces;
+using Roomba.Systems.LevelAssets;
 using UnityEngine;
 using Zenject;
 
 namespace Roomba.Presentation
 {
-    public class InteractableDebug : MonoBehaviour, IInteractable
+    public class InteractableDebug : InteractableBase
     {
-        public void Interact()
+        public override void Interact()
         {
+            base.Interact();
             gameObject.SetActive(false);
         }
     }
