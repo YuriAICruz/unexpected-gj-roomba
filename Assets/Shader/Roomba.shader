@@ -2,7 +2,7 @@
 {
     Properties
     {
-        _Alpha ("Alpha", Range(0, 1)) = 0.1
+        _Alpha ("Alpha", Range(0, 1)) = 0.4
     
     
         _LineColor ("Line Color", Color) = (1,1,1,1)
