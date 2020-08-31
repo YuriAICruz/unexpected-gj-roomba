@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using Roomba.Systems;
 using UnityEngine;
 using UnityEngine.UI;
@@ -41,7 +42,26 @@ namespace Roomba.Presentation
 
         private void Update()
         {
-            _input.Tick();
+            if (Input.GetMouseButtonDown(0))
+            {
+                StartCoroutine(ResetSelection());
+            }
+        }
+
+        private IEnumerator ResetSelection()
+        {
+            yield return new WaitForSeconds(2);
+            if (OptionsMenu.activeSelf)
+            {
+                EventSystem.current.SetSelectedGameObject(null);
+                EventSystem.current.SetSelectedGameObject(FirstOption);
+            }
+            else
+            {
+                EventSystem.current.SetSelectedGameObject(null);
+                EventSystem.current.SetSelectedGameObject(startGame.gameObject);  
+            }
+            
         }
     }
 }
