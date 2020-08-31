@@ -2,10 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
+using AsyncOperation = UnityEngine.AsyncOperation;
+using Object = UnityEngine.Object;
 
 namespace Mirror
 {
@@ -243,6 +246,18 @@ namespace Mirror
 
             // setup OnSceneLoaded callback
             SceneManager.sceneLoaded += OnSceneLoaded;
+
+            InitializeIntantiation();
+        }
+
+        private void InitializeIntantiation()
+        {
+            ClientScene.Instantiate += InstantiateClient;
+        }
+
+        protected virtual GameObject InstantiateClient(GameObject prefab, Vector3 position, Quaternion rotation)
+        {
+            return Object.Instantiate(prefab, position, rotation);
         }
 
         /// <summary>
@@ -822,7 +837,7 @@ namespace Mirror
             // It will be re-enabled in FinishScene.
             Transport.activeTransport.enabled = false;
 
-            loadingSceneAsync = SceneManager.LoadSceneAsync(newSceneName);
+            loadingSceneAsync = LoadSceneAsync(newSceneName);
 
             // ServerChangeScene can be called when stopping the server
             // when this happens the server is not active so does not need to tell clients about the change
@@ -873,13 +888,13 @@ namespace Mirror
             switch (sceneOperation)
             {
                 case SceneOperation.Normal:
-                    loadingSceneAsync = SceneManager.LoadSceneAsync(newSceneName);
+                    loadingSceneAsync = LoadSceneAsync(newSceneName);
                     break;
                 case SceneOperation.LoadAdditive:
                     // Ensure additive scene is not already loaded on client by name or path
                     // since we don't know which was passed in the Scene message
                     if (!SceneManager.GetSceneByName(newSceneName).IsValid() && !SceneManager.GetSceneByPath(newSceneName).IsValid())
-                        loadingSceneAsync = SceneManager.LoadSceneAsync(newSceneName, LoadSceneMode.Additive);
+                        loadingSceneAsync = LoadSceneAsync(newSceneName, LoadSceneMode.Additive);
                     else
                     {
                         logger.LogWarning($"Scene {newSceneName} is already loaded");
@@ -1490,5 +1505,10 @@ namespace Mirror
         public virtual void OnStopHost() { }
 
         #endregion
+
+        protected virtual AsyncOperation LoadSceneAsync(string newSceneName, LoadSceneMode loadSceneMode = LoadSceneMode.Single)
+        {
+            return SceneManager.LoadSceneAsync(newSceneName, loadSceneMode);
+        }
     }
 }

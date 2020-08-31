@@ -29,3 +29,8 @@ MonoBehaviour:
     mouseMask:
       serializedVersion: 2
       m_Bits: 4294967295
+  networkManager: {fileID: 3399336842842766569, guid: da44ec5cc3c47374ea66b8f003a91777,
+    type: 3}
+  globalSettings:
+    playerPrefab: {fileID: 6367563518847860129, guid: c59ece8b57a556a4da52b5a3552b1464,
+      type: 3}
