@@ -37,6 +37,8 @@ namespace Roomba.Installers
             Container.BindInterfacesAndSelfTo<ApplicationManager>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<NetworkConnection>().AsSingle().NonLazy();
             
+            Container.Bind<IDataRepository>().To<LocalJsonFileDataRepository>().AsSingle().NonLazy();
+            
             Container.BindFactory<GameNetworkManager, GameNetworkManager.Factory>().FromComponentInNewPrefab(networkManager);
             
             Container.BindInstance(Container.Resolve<GameNetworkManager.Factory>().Create()).AsSingle();

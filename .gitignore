@@ -12,6 +12,8 @@
 .vscode/*
 /.vscode/*
 
+/localData/
+
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/

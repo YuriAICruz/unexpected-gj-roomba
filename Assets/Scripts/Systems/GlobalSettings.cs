@@ -8,5 +8,6 @@ namespace Roomba.Systems
     public class GlobalSettings
     {
         public Player playerPrefab;
+        public string dataFolder;
     }
 }

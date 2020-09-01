@@ -34,3 +34,4 @@ MonoBehaviour:
   globalSettings:
     playerPrefab: {fileID: 6367563518847860129, guid: c59ece8b57a556a4da52b5a3552b1464,
       type: 3}
+    dataFolder: localData
